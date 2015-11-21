@@ -27,6 +27,8 @@ public class Academia {
 		this.cursosAcademia= new ArrayList<Curso>();
 		this.alumnosAcademia=  new ArrayList<Alumno>();
 		this.matriculasAcademia= new ArrayList<Matricula>();
+		//probando academia
+		System.out.println("WEEEEEEEEEEEEEEEEEAA");
 	}
 
 	//Alumnos
