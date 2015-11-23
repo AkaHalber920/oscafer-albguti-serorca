@@ -5,8 +5,6 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 
 
-//PRUEBA 3333333
-
 /**
  * Crea y mantiene la lista de cursos, alumnos y matriculas. 
  * Comprueba si se dan las condiciones previas para las matriculas y si es posible crearlas 
