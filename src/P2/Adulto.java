@@ -14,4 +14,6 @@ public class Adulto extends Alumno{
 		return DNI;		
 	}
 	
+	
+	
 }

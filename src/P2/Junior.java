@@ -5,10 +5,12 @@ import java.util.GregorianCalendar;
 public class Junior extends Alumno{
 	
 	private GregorianCalendar fechaNac;
+	private Adulto adultoResponsable;
 	
-	public Junior(GregorianCalendar fechaNac, String nombre, String apellidos) {
+	public Junior( Adulto adultoResponsable, String nombre, String apellidos, GregorianCalendar fechaNac) {
 		super(nombre, apellidos);
-		this.setFechaNac(fechaNac);
+		this.fechaNac=fechaNac;
+		this.setAdultoResponsable(adultoResponsable);
 	}
 
 	public GregorianCalendar getFechaNac() {
@@ -17,6 +19,14 @@ public class Junior extends Alumno{
 
 	public void setFechaNac(GregorianCalendar fechaNac) {
 		this.fechaNac = fechaNac;
+	}
+
+	public Adulto getAdultoResponsable() {
+		return adultoResponsable;
+	}
+
+	public void setAdultoResponsable(Adulto adultoResponsable) {
+		this.adultoResponsable = adultoResponsable;
 	}
 
 	

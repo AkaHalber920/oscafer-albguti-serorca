@@ -14,7 +14,7 @@ public class Curso {
 
 	private String idCurso;
 	private String idioma;
-	private int nivel;
+	
 	private GregorianCalendar fechaIni;
 	private GregorianCalendar fechaFin;
 	private GregorianCalendar horario;
@@ -25,11 +25,10 @@ public class Curso {
 	/**
 	 * Constructor de un curso
 	 */
-	public Curso(String idCurso, String idioma, int nivel, GregorianCalendar fechaIni, GregorianCalendar fechaFin, GregorianCalendar horario,  int maxNalumnos, double precio) {
+	public Curso(String idCurso, String idioma, GregorianCalendar fechaIni, GregorianCalendar fechaFin, GregorianCalendar horario,  int maxNalumnos, double precio) {
 		this.idCurso = idCurso;
 		this.idioma = idioma;
-		this.nivel = nivel;
-		this.fechaIni = fechaIni;
+				this.fechaIni = fechaIni;
 		this.fechaFin = fechaFin;
 		this.horario = horario;
 		this.maxNalumnos = maxNalumnos;
@@ -63,23 +62,7 @@ public class Curso {
 		this.idioma = idioma;
 	}
 
-	/**
-	 * Devuelve el nivel del curso.
-	 * 
-	 * @return nivel del curso
-	 */
-	public int getNivel() {
-		return nivel;
-	}
 	
-	/**
-	 * Cambia el nivel del curso
-	 * 
-	 * @param nivel
-	 */
-	public void setNivel(int nivel) {
-		this.nivel = nivel;
-	}
 
 	/**
 	 * Devuelve la fecha de inicio del curso

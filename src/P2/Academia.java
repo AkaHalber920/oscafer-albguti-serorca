@@ -3,6 +3,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
+
+
+
+
 /**
  * Crea y mantiene la lista de cursos, alumnos y matriculas. 
  * Comprueba si se dan las condiciones previas para las matriculas y si es posible crearlas 
@@ -40,13 +44,65 @@ public class Academia {
 	 * @param DNI	del alumno a comprobar
 	 * @return a/null	(alumno si existe/null si no existe)
 	 */
-	public Alumno checkAlumno(String DNI){
-		Alumno a=null;	// Si el curso existe se almacenara en a
+	/*
+	public Alumno checkAlumno(Alumno a){
+				
+		if (alumnosAcademia.contains(a)) {   //Si el alumno existe en la academia
+			return a;						// lo devolvemos
+		} else {
+			return null;					
+		}
+	}*/
+	
+	/**
+	 * Devuele el alumno si existe mediante su DNI, si no existe devuelve null.
+	 * @param DNI	del alumno a comprobar
+	 * @return a/null	(alumno si existe/null si no existe)
+	 */
+	public Alumno checkAlumno(Alumno a){
+		Alumno alumno = null;
+		if (a instanceof Adulto){
+			Iterator<Alumno> it = alumnosAcademia.iterator();
+			while (it.hasNext()) {
+				Adulto aux = (Adulto) it.next();
+				if (aux.getDNI().equals(((Adulto) a).getDNI())) { //Check: Es el alumno deseado
+					alumno=aux; //lo guardamos en a
+				}
+			}
+			
+					
+		}else{
+			Iterator<Alumno> it = alumnosAcademia.iterator();
+			while (it.hasNext()) {
+				Junior aux = (Junior) it.next();
+				if (aux.equals(a)) { //Check: Es el alumno deseado
+					alumno=aux; //lo guardamos en a
+				}
+			}
+			
+			
+		}
+			if (alumno == null) { //Si no est� el curso
+				return null;
+			} else {
+				return alumno;
+			}
+			
+			
+		}
+		
+	/**
+	 * Devuele el alumno si existe mediante su DNI, si no existe devuelve null.
+	 * @param DNI	del alumno a comprobar
+	 * @return a/null	(alumno si existe/null si no existe)
+	 */
+	public Adulto obtenerAdulto(String DNI){
+		Adulto a=null;	// Si el curso existe se almacenara en a
 		Iterator<Alumno> it = alumnosAcademia.iterator();
 		while (it.hasNext()) {
-			Alumno aaux = it.next();
-			if (aaux.getDNI().equals(DNI)) { //Check: Es el alumno deseado
-				a=aaux; //le guardamos en a
+			Adulto aux = (Adulto) it.next();
+			if (aux.getDNI().equals(DNI)) { //Check: Es el alumno deseado
+				a=aux; //le guardamos en a
 			}
 		}
 		
@@ -56,6 +112,8 @@ public class Academia {
 			return a;
 		}
 	}
+	
+	
 	/**
 	 * Crea un alumno.
 	 * 
@@ -63,13 +121,30 @@ public class Academia {
 	 * @param nombre del nuevo alumno
 	 * @param apellidos del nuevo alumno
 	 */
-	public void CrearAlumno(String DNI, String nombre, String apellidos){
-		if(checkAlumno(DNI)==null){	// Comprobamos que NO exista un alumno con ese DNI ya
-			Alumno a = new Alumno(DNI, nombre, apellidos); //Guardamos al nuevo alumno en a
-			alumnosAcademia.add(a); //Lo anadimos al ArrayList de alumnos de la academia.
-			System.out.println("** - Alumno "+a.getDNI()+" creado correctamente.");	
-		}else System.out.println("**AVISO** Ya existe un alumno con DNI "+DNI+". **");
+	public void CrearAlumno(String DNI, String nombre, String apellidos, GregorianCalendar fechaNac){
+		//Alumno al = null;
+		if (fechaNac==null){
+			Adulto al = new Adulto(DNI,nombre, apellidos);
+			if (checkAlumno(al)==null) {	// Comprobamos que NO exista un alumno con ese DNI ya
+				alumnosAcademia.add(al); //Lo anadimos al ArrayList de alumnos de la academia.
+				System.out.println("** - Alumno Adulto "+ al.getDNI() +" creado correctamente.");	
+			}else System.out.println("**AVISO** Ya existe un alumno Adulto con DNI "+DNI+". **");
+		}else{			
+			Adulto resp = obtenerAdulto(DNI);
+			if (resp!=null){
+				Junior j = new Junior(  resp, nombre,  apellidos, fechaNac);
+				if (checkAlumno(j)==null) {					
+					alumnosAcademia.add(j); //Lo anadimos al ArrayList de alumnos de la academia.
+					System.out.println("** - Alumno Junior "+ j.getNombre() +" creado correctamente.");	
+				}else System.out.println("**AVISO** Ya existe ese alumno Junior **");
+								
+			}
+							
+		}
+			
+			
 	}
+	
 	
 	/**
 	 * Imprime la lista de todos los alumnos de la academia.
@@ -82,10 +157,15 @@ public class Academia {
 		Iterator<Alumno> it = alumnosAcademia.iterator();
 		while(it.hasNext()){
 			Alumno a=it.next();
-			System.out.println("  DNI: "+a.getDNI()+"\n\tNombre: "+a.getNombre()+"\tApellidos: "+a.getApellidos()+"\tDeuda: "+a.getDeuda());
-			//cursosAlumno(a);
-			System.out.println("  -----------------------------------------------------------------");
-			
+			if (a instanceof Adulto){
+				System.out.println("  DNI: "+((Adulto) a).getDNI()+"\n\tNombre: "+a.getNombre()+"\tApellidos: "
+			+a.getApellidos()+"\tDeuda: "+a.getDeuda());
+				System.out.println("  -----------------------------------------------------------------");
+			}else{
+				System.out.println("  Nombre: "+a.getNombre()+"\tApellidos: "+a.getApellidos()+"\tDeuda: "
+			+a.getDeuda()+"Fecha Nacimiento: "+((Junior) a).getFechaNac()+"Responsable: "+((Junior) a).getAdultoResponsable().getDNI());
+				System.out.println("  -----------------------------------------------------------------");
+			}
 		}System.out.println("____________________________________________________________________\n");
 		}else System.out.println("**OK** - No existen alumnos.");
 		
@@ -552,90 +632,16 @@ public class Academia {
 		// Creacion de alumnos
 		//(String DNI,String nombre,String apellidos)
 		
-		AcademiaZorrilla.CrearAlumno("72885727S", "Oscar", "Fernandez Aranda");
-		AcademiaZorrilla.CrearAlumno("72885727S", "Oscar", "Fernandez Aranda"); //Error: alumno con DNI repetido
-		AcademiaZorrilla.CrearAlumno("12345667R", "Sergio", "Orcajo Fernandez");
-		AcademiaZorrilla.CrearAlumno("70817416W", "Alberto", "Gutierrez del Campo ");
+		AcademiaZorrilla.CrearAlumno("72885727S", "Oscar", "Fernandez Aranda", null);
+		AcademiaZorrilla.imprimirAlumnos();
+		AcademiaZorrilla.CrearAlumno("72885727S", "Oscar", "Fernandez Aranda", null); //Error: alumno con DNI repetido
+		AcademiaZorrilla.imprimirAlumnos();
+		AcademiaZorrilla.CrearAlumno("72885727S", "Sergio", "Orcajo Fernandez", new GregorianCalendar (2000, 12, 12) );
+		AcademiaZorrilla.CrearAlumno("70817416W", "Alberto", "Gutierrez del Campo ", new GregorianCalendar (2000, 13, 12));
 		AcademiaZorrilla.imprimirAlumnos();
 		
 		// Creacion de cursos
 		//(String idCurso, String idioma, int nivel, int dia, int mes, int ano, int diaf, int mesf, int anof, int hora, int min, int maxNalumnos, double precio)
-		AcademiaZorrilla.CrearCurso("I.0a", "Ingles", 0,1,1,2014,1,12,2018,8,0, 1,(double) 5); //Error: fecha de inicio anterior a hoy
-		AcademiaZorrilla.CrearCurso("I.0a", "Ingles", 0,1,1,2017,1,12,2016,8,0, 1,(double) 5); //Error: fecha de finalizacion anterior a la de inicio
-		AcademiaZorrilla.CrearCurso("I.0a", "Ingles", 0,1,1,2017,1,12,2018,7,0, 1,(double) 5); //Error: hora anterior a apertura de la academia
-		AcademiaZorrilla.CrearCurso("I.0a", "Ingles", 0,1,1,2017,1,12,2018,22,0, 1,(double) 5); //Error: hora posterior a cierre de la academia
-		AcademiaZorrilla.CrearCurso("I.0a", "Ingles", -1,1,1,2017,1,12,2018,8,0, 1,(double) 5); //Error: el nivel ha de ser 0 o mas
-		AcademiaZorrilla.CrearCurso("I.0a", "Ingles", 0,1,1,2017,1,12,2018,8,0, 0,(double) 5); //Error: el numero maximo de alumnos ha de ser 1 o mas
-		AcademiaZorrilla.CrearCurso("I.0a", "Ingles", 0,1,1,2017,1,12,2018,8,0, 1,(double) -5); //Error: el precio ha de ser 0� o mas
-		AcademiaZorrilla.CrearCurso("I.0a", "Ingles", 0,1,1,2017,1,12,2018,8,0, 1,(double) 5);
-		AcademiaZorrilla.CrearCurso("I.1a", "Ingles", 1,1,1,2017,1,12,2018,8,0, 2,(double) 10);
-		AcademiaZorrilla.CrearCurso("I.2a", "Ingles", 2,1,1,2017,1,12,2018,8,0, 2,(double) 15);
-		AcademiaZorrilla.CrearCurso("I.3a", "Ingles", 3,1,1,2017,1,12,2018,8,0, 1,(double) 20);
-		AcademiaZorrilla.CrearCurso("F.0a", "Frances", 0,1,1,2017,1,12,2018,8,0, 1,(double) 4);
-		AcademiaZorrilla.imprimirCursos();
 		
-		// Creacion de matriculas
-		//(String idCurso, String DNI)
-		AcademiaZorrilla.crearMatricula("I.1a", "72885727S");
-		AcademiaZorrilla.crearMatricula("F.0a", "72885727S");
-		AcademiaZorrilla.crearMatricula("I.0a", "12345667R");	// Error curso lleno
-		//AcademiaZorrilla.imprimirMatriculas();
-		//AcademiaZorrilla.imprimirAlumnos();
-		//AcademiaZorrilla.imprimirMatriculasPendientes();
-		//AcademiaZorrilla.pagarMatricula("I.0a", "72885727s");
-		//AcademiaZorrilla.imprimirAlumnos();
-		//AcademiaZorrilla.imprimirMatriculasPendientes();
-		
-		//Vemos si se han generado bien las deudas
-		System.out.println("Vemos si se han generado bien las deudas: ");
-		AcademiaZorrilla.imprimirAlumnos();
-		AcademiaZorrilla.imprimirMatriculasPendientes();
-		
-		// Subir y bajar de nivel
-		System.out.println("Subir y bajar de nivel");
-		System.out.println("Vemos que Oscar esta en Ingles1");
-		AcademiaZorrilla.imprimirListaCusosAlumno("72885727S"); //Vemos que Oscar esta en Ingles1
-		System.out.println("Subimos a Oscar a ingles2");
-		AcademiaZorrilla.cambiarNivel("I.1a", "72885727S", true); //Subimos a Oscar de Ingles1 al siguiente Ingles2
-		System.out.println("Vemos que Oscar esta en Ingles2");
-		AcademiaZorrilla.imprimirListaCusosAlumno("72885727S"); //Vemos que Oscar esta en Ingles2
-		System.out.println("Vemos si se han gestionado bien las deudas: ");
-		AcademiaZorrilla.imprimirAlumnos();
-		AcademiaZorrilla.imprimirMatriculasPendientes();
-		System.out.println("Volvemos a bajar a Oscar a Ingles1");
-		AcademiaZorrilla.cambiarNivel("I.2a", "72885727S", false); //Bajamos a Oscar a Ingles1
-		AcademiaZorrilla.imprimirListaCusosAlumno("72885727S"); //Vemos que Oscar esta en Ingles1
-		System.out.println("Vemos si se han gestionado bien las deudas: ");
-		AcademiaZorrilla.imprimirAlumnos();
-		AcademiaZorrilla.imprimirMatriculasPendientes();
-		
-		//Pago de Matriculas
-		AcademiaZorrilla.imprimirMatriculas();
-		System.out.println("Oscar paga I.2a Ingles nivel 2. Error?");
-		AcademiaZorrilla.pagarMatricula("I.2a", "72885727S");	//Error: Orcar no tiene pendiente Ingles2
-		System.out.println("Alberto paga I.2a Ingles nivel 2. Error?");
-		AcademiaZorrilla.pagarMatricula("I.2a", "70817416W");	//Error: Alberto no tiene nada que pagar
-		System.out.println("Desconocido paga I.2a Ingles nivel 2. Error?");
-		AcademiaZorrilla.pagarMatricula("I.2a", "70707070X");	//Error: Orcar no tiene pendiente Ingles2
-		System.out.println("Oscar paga A.2a Aleman nivel 2 que no existe. Error?");
-		AcademiaZorrilla.pagarMatricula("A.2a", "72885727S");	//Error: Orcar no tiene pendiente Ingles2
-		System.out.println("Oscar paga I.1a Ingles nivel 1 ");
-		AcademiaZorrilla.pagarMatricula("I.1a", "72885727S");
-		AcademiaZorrilla.imprimirAlumnos();	//Vemos si su deuda ha disminuido
-		AcademiaZorrilla.imprimirMatriculasPendientes();	//Vemos si esa matricula ya no esta pendiente
-		AcademiaZorrilla.imprimirMatriculas();	//Vemos si la matricula existe en la academia como pagada
-		
-		//Eliminacion de matriculas
-		AcademiaZorrilla.eliminarMatricula("I.0a", "12345667R"); //Eliminamos una matricula aun no pagada, debe mantenerse la deuda
-		AcademiaZorrilla.eliminarMatricula("I.1a", "72885727S"); //Eliminamos una matricula ya pagada
-		AcademiaZorrilla.imprimirAlumnos();
-		AcademiaZorrilla.imprimirMatriculasPendientes();
-		
-		//Imprimir los cursos que tiene un alumno concreto
-		AcademiaZorrilla.imprimirListaCusosAlumno("72885727S");
-		//Imprimir los alumnos que tiene un curso concreto
-		AcademiaZorrilla.imprimirListaAlumnosCurso("F.0a");
-		//Imprimir las matriculas pendientes de pago de un curso concreto
-		AcademiaZorrilla.imprimirListaMatriculasPendientesCurso("F.0a");
 	}
 } // Fin de Academia
