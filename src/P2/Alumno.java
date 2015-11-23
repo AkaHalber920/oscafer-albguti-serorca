@@ -1,4 +1,7 @@
 package P2;
+
+
+
 /**
  * Respresenta cada uno de los alumnos de la academia.
  * 
@@ -10,28 +13,22 @@ package P2;
 
 
 public class Alumno{
-	private String DNI;
+
 	private String nombre;
 	private String apellidos;
 	private double deuda;
 	
+	
 // Constructor 
-	public Alumno(String DNI,String nombre,String apellidos){
-		this.DNI=DNI;
+	public Alumno(String nombre,String apellidos){
+	
 		this.nombre=nombre;
 		this.apellidos=apellidos;
 		this.deuda=0;
 		//Probando GIT v3
 	}
 
-	/**  
-	 * Devuelve el DNI del alumno
-	 * @return DNI del alumno
-	 */
-	public String getDNI(){
-		return DNI;		
-	}
-	
+
 	/**  
 	 * Devuelve el nombre del alumno.
 	 * @return Nombre del alumno
