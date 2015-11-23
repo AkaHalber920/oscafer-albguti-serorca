@@ -27,6 +27,8 @@ public class Academia {
 		this.cursosAcademia= new ArrayList<Curso>();
 		this.alumnosAcademia=  new ArrayList<Alumno>();
 		this.matriculasAcademia= new ArrayList<Matricula>();
+		
+		//PRUEBA DE COMMIT 1
 		//Probando GIT v4
 	}
 
@@ -46,7 +48,7 @@ public class Academia {
 			}
 		}
 		
-		if (a == null) { //Si no está el curso
+		if (a == null) { //Si no estï¿½ el curso
 			return null;
 		} else {
 			return a;
@@ -71,7 +73,7 @@ public class Academia {
 	 * Imprime la lista de todos los alumnos de la academia.
 	 */
 	public void imprimirAlumnos(){
-		if(!alumnosAcademia.isEmpty()){ //Si no está vacía
+		if(!alumnosAcademia.isEmpty()){ //Si no estï¿½ vacï¿½a
 		System.out.println("____________________________________________________________________");
 		System.out.println("_______________________________ALUMNOS______________________________");
 		System.out.println("____________________________________________________________________");
@@ -253,7 +255,7 @@ public class Academia {
 									Curso c= new Curso(idCurso,  idioma,  nivel,  fechaIni, fechaFin, horario, maxNalumnos,precio);
 									cursosAcademia.add(c);
 									System.out.println("Curso "+c.getIdCurso()+" creado correctamente.");	
-								}else System.out.println("**AVISO** El precio ha de ser igual o mayor que 0€. **");
+								}else System.out.println("**AVISO** El precio ha de ser igual o mayor que 0ï¿½. **");
 							}else System.out.println("**AVISO** El numero maximo de alumnos debe ser mayor que 0. **");
 						}else System.out.println("**AVISO** La fecha de finalizacion del curso debe ser anterior a la fecha de inicio. **");
 					}else System.out.println("**AVISO** La fecha de inicio del curso debe ser posterior a la actual. **");
@@ -562,7 +564,7 @@ public class Academia {
 		AcademiaZorrilla.CrearCurso("I.0a", "Ingles", 0,1,1,2017,1,12,2018,22,0, 1,(double) 5); //Error: hora posterior a cierre de la academia
 		AcademiaZorrilla.CrearCurso("I.0a", "Ingles", -1,1,1,2017,1,12,2018,8,0, 1,(double) 5); //Error: el nivel ha de ser 0 o mas
 		AcademiaZorrilla.CrearCurso("I.0a", "Ingles", 0,1,1,2017,1,12,2018,8,0, 0,(double) 5); //Error: el numero maximo de alumnos ha de ser 1 o mas
-		AcademiaZorrilla.CrearCurso("I.0a", "Ingles", 0,1,1,2017,1,12,2018,8,0, 1,(double) -5); //Error: el precio ha de ser 0€ o mas
+		AcademiaZorrilla.CrearCurso("I.0a", "Ingles", 0,1,1,2017,1,12,2018,8,0, 1,(double) -5); //Error: el precio ha de ser 0ï¿½ o mas
 		AcademiaZorrilla.CrearCurso("I.0a", "Ingles", 0,1,1,2017,1,12,2018,8,0, 1,(double) 5);
 		AcademiaZorrilla.CrearCurso("I.1a", "Ingles", 1,1,1,2017,1,12,2018,8,0, 2,(double) 10);
 		AcademiaZorrilla.CrearCurso("I.2a", "Ingles", 2,1,1,2017,1,12,2018,8,0, 2,(double) 15);
