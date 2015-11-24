@@ -16,7 +16,7 @@ import java.util.Iterator;
  * 
  */
 public class Academia {
-
+	//Probando GIIT GIIT
 	private ArrayList<Curso> cursosAcademia;
 	private ArrayList<Alumno>alumnosAcademia;
 	private ArrayList<Matricula> matriculasAcademia;	
