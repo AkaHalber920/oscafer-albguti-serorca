@@ -2,8 +2,6 @@ package academiaZorrilla;
 
 import java.util.GregorianCalendar;
 
-import academiaZorrilla.Curso;
-
 /**
  * Curso pensado exclusivamente para alumnos de tipo Junior 
  * @author pcp

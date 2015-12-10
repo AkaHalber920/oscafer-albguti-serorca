@@ -1,8 +1,6 @@
 package academiaZorrilla;
 
 import java.util.GregorianCalendar;
-
-import academiaZorrilla.Curso;
 /**
  * Curso para toda clase de alumnos
  * @author pcp

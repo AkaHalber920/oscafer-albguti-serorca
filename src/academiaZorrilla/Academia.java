@@ -1,5 +1,5 @@
 package academiaZorrilla;
-//Probandoo
+ 
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -78,21 +78,9 @@ public class Academia {
 		} else
 			return alumno;	
 	}
+
 	/**
-	 * Crea un alumno adulto.
-	 * @param DNI	del  alumno o de su responsable
-	 * @param nombre 
-	 * @param apellidos
-	 */
-	public void crearAlumno(String DNI,String nombre,String apellidos){
-		if(checkAlumno(DNI)==null){		// Comprobamos que no exista un alumno con el DNI
-			Alumno alumno= new Adulto(DNI, nombre, apellidos);
-			alumnosAcademia.add(alumno);
-			System.out.println("** - Alumno "+((Adulto)alumno).getNombre()+" "+((Adulto)alumno).getApellidos()+" creado correctamente.");	
-		}else System.out.println("**AVISO** Ya existe un alumno con DNI "+DNI+". **");
-	}
-	/**
-	 * Crea un alumno junior.
+	 * Crea un alumno.
 	 * @param DNI	del  alumno responsable
 	 * @param nombre 
 	 * @param apellidos
@@ -100,9 +88,28 @@ public class Academia {
 	 * @param mes	de nacimiento 
 	 * @param ano	de nacimiento 
 	 */
-	public void crearAlumno(String DNI,String nombre,String apellidos, int dia, int mes ,int ano){
-		if(checkAlumno(nombre,apellidos)==null){
-			Alumno adultoResponsable=checkAlumno(DNI);
+	public void crearAlumno(String DNI,String nombre,String apellidos, int dia, int mes ,int ano,String DNIResponsable){
+		// Comprobaciones
+		//if(DNI!=null && DNIResponsable != null){
+		// Fin comprobaciones
+		if(DNIResponsable==null){		// ADULTO porque no tiene adulto responsable
+			boolean band = false;
+			Iterator<Alumno> ita = alumnosAcademia.iterator();
+			while (ita.hasNext()) {
+				Alumno alumnoAux = ita.next();
+				if (alumnoAux instanceof Adulto && ((Adulto) alumnoAux).getDNI()== DNI) {
+					band=true;
+				}
+			}
+			if(band==true){
+				System.out.println("**AVISO** Ya existe un alumno con DNI "+DNI+".");
+			}else{
+				Alumno alumno= new Adulto(DNI, nombre, apellidos);
+				alumnosAcademia.add(alumno);
+				System.out.println("** - Alumno "+((Adulto)alumno).getNombre()+" "+((Adulto)alumno).getApellidos()+" creado correctamente.");	
+			}
+		}else{						// JUNIOR
+			Alumno adultoResponsable=checkAlumno(DNIResponsable);
 			if(adultoResponsable!=null){
 				GregorianCalendar fechaNacimiento=new GregorianCalendar(ano, mes-1, dia);
 				java.sql.Date milfechaNacimiento = new java.sql.Date(fechaNacimiento.getTimeInMillis());	// Almacenamos la conversion en milisegundos de la fecha de nacimiento
@@ -110,17 +117,17 @@ public class Academia {
 				java.sql.Date milfechaActual = new java.sql.Date(fechaActual.getTimeInMillis());	// Almacenamos la conversion en milisegundos de la fecha actual
 				long diferencia = this.getDiferenciaFechas(milfechaNacimiento, milfechaActual, 0);
 				if(diferencia > 0 && diferencia<17){ // Comprobamos que la diferencia sea mayor que 0 y menor de 17
-		
-				/*		
-				long diferencia = (milfechaActual.getTime()-milfechaNacimiento.getTime()); // Almacenamos la diferencia de fecha de nacimiento y actual
-				if(diferencia > 0 && (diferencia/1000000000)/10<17){ // Comprobamos que la diferencia sea mayor que 0 y menor de 17
-		*/
 					Alumno alumno= new Junior(nombre,apellidos, fechaNacimiento, (Adulto)adultoResponsable);
 					alumnosAcademia.add(alumno);
 					System.out.println("** - Alumno "+alumno.getNombre()+" "+alumno.getApellidos()+" creado correctamente.");
 				}else System.out.println("**AVISO** La edad del alumno debe ser mayor de 0 y menor de 17.(Tiene "+diferencia+" años) **");
-			}else System.out.println("**AVISO** No existe el alumno adulto con DNI "+DNI+". **");
-		}else System.out.println("**AVISO** Ya existe el alumno "+nombre+" "+apellidos+". **");
+			}else System.out.println("**AVISO** No existe el alumno adulto con DNI "+DNIResponsable+". **");
+		}
+		// Mensajes de error
+	
+	
+	
+	
 	}
 	/**
 	 * Imprime la lista de alumnos.
@@ -415,8 +422,16 @@ public class Academia {
 		} else
 			return c;	
 	}
+	
+	public void crearCurso(String idCurso, String idioma, int nivel, int dia, int mes, int ano, int diaf, int mesf,
+			int anof, int hora, int min, int maxNalumnos, double precio){
+		
+	}
+	
+	
+	
 	/**
-	 * Crea un curso normal.
+	 * Crea un curso.
 	 * @param idCurso del nuevo curso
 	 * @param idioma del nuevo curso
 	 * @param nivel del nuevo curso
@@ -432,75 +447,39 @@ public class Academia {
 	 * @param precio del nuevo curso
 	 */
 	public void crearCurso(String idCurso, String idioma, int nivel, int dia, int mes, int ano, int diaf, int mesf,
-			int anof, int hora, int min, int maxNalumnos, double precio){
+			int anof, int hora, int min, int maxNalumnos, double precio, int edadMinima,int edadMaxima){
 		if(checkCurso(idCurso)==null){		// Comprobamos que no exista un curso con idCurso
-		//	if(nivel!=(Integer)null){	// Si introducidos nivel distinto de null creamos un curso normal
-				if(nivel>=0){					// Comprobamos que el nivel sea igual o mayor que 0
-					if(hora>=8 && hora<=21){	// Comprobamos que la hora es entre las 8 y las 21
-						GregorianCalendar fechaIni = new GregorianCalendar(ano, mes-1, dia);
-						java.sql.Date milfechaIni = new java.sql.Date(fechaIni.getTimeInMillis());	// Almacenamos la conversion a milisegundos de la fecha de inicio
-						GregorianCalendar fechaFin = new GregorianCalendar(anof, mesf-1, diaf);
-						java.sql.Date milfechaFin = new java.sql.Date(fechaFin.getTimeInMillis());	// Almacenamos la conversion a milisegundos de la fecha de fin
-						long diferencia = (milfechaFin.getTime() - milfechaIni.getTime()); // Almacenamos la diferencia de fin - inicio
-						if(diferencia > 0){		// Comprobamos que la diferencia sea mayor que 0, asi nos aseguramos que la fechaIni < fechaFin
-							if(maxNalumnos>0){	// Comprobamos que el numero maximo de alumnos sea mayor que 0
-								if(precio>=0){	// Comprobamos que el precio sea mayor o igual a 0
+			if(nivel>=0){					// Comprobamos que el nivel sea igual o mayor que 0
+				if(hora>=8 && hora<=21){	// Comprobamos que la hora es entre las 8 y las 21
+					GregorianCalendar fechaIni = new GregorianCalendar(ano, mes-1, dia);
+					java.sql.Date milfechaIni = new java.sql.Date(fechaIni.getTimeInMillis());	// Almacenamos la conversion a milisegundos de la fecha de inicio
+					GregorianCalendar fechaFin = new GregorianCalendar(anof, mesf-1, diaf);
+					java.sql.Date milfechaFin = new java.sql.Date(fechaFin.getTimeInMillis());	// Almacenamos la conversion a milisegundos de la fecha de fin
+					long diferencia = (milfechaFin.getTime() - milfechaIni.getTime()); // Almacenamos la diferencia de fin - inicio
+					if(diferencia > 0){		// Comprobamos que la diferencia sea mayor que 0, asi nos aseguramos que la fechaIni < fechaFin
+						if(maxNalumnos>0){	// Comprobamos que el numero maximo de alumnos sea mayor que 0
+							if(precio>=0){	// Comprobamos que el precio sea mayor o igual a 0
+								if(nivel!=(Integer)null){	// NORMAL porque introducidos nivel distinto de null creamos un curso normal
 									GregorianCalendar horario =new GregorianCalendar(0,0,0,hora,min);
 									Curso curso= new CursoNormal(idCurso,  idioma,  nivel,  fechaIni, fechaFin, horario, maxNalumnos,precio);
 									cursosAcademia.add(curso);
 									System.out.println("**OK** - Curso "+curso.getIdCurso()+" creado correctamente.");	
-								}else System.out.println("**AVISO** El precio ha de ser igual o mayor que 0. **");
-							}else System.out.println("**AVISO** El numero maximo de alumnos debe ser mayor que 0. **");
-						}else System.out.println("**AVISO** La fecha de inicio del curso debe ser anterior a la fecha de fin. **");
-					}else System.out.println("**AVISO** La hora debe ser entre las 8 y las 21. **");
-				}else System.out.println("**AVISO** El nivel ha de ser mayor que 0. **");
-		//	}else{}
+								}else{						// JUNIOR
+									if(edadMinima>0){	// Comprobamos que la edad minima es mayor que 0
+										if(edadMaxima<17){	// Comprobamos que la edad maxima es menor que 17.
+											GregorianCalendar horario =new GregorianCalendar(0,0,0,hora,min);
+											Curso curso= new CursoJunior(idCurso, idioma, fechaIni, fechaFin, horario, maxNalumnos, precio, edadMinima, edadMaxima);
+											cursosAcademia.add(curso);
+											System.out.println("**OK** - Curso "+curso.getIdCurso()+" creado correctamente.");
+										}else System.out.println("**AVISO** La edad maxima debe ser menor o igual que 18. **");
+									}else System.out.println("**AVISO** La edad minima debe ser mayor que 0. **");
+								}
+							}else System.out.println("**AVISO** El precio ha de ser igual o mayor que 0. **");
+						}else System.out.println("**AVISO** El numero maximo de alumnos debe ser mayor que 0. **");
+					}else System.out.println("**AVISO** La fecha de inicio del curso debe ser anterior a la fecha de fin. **");
+				}else System.out.println("**AVISO** La hora debe ser entre las 8 y las 21. **");
+			}else System.out.println("**AVISO** El nivel ha de ser mayor que 0. **");
 		}else System.out.println("**AVISO** Ya existe un curso con identificador "+idCurso+". **");
-	
-	}
-	/**
-	 * Crea un curso junior.
-	 * @param idCurso
-	 * @param idioma
-	 * @param dia
-	 * @param mes
-	 * @param ano
-	 * @param diaf
-	 * @param mesf
-	 * @param anof
-	 * @param hora
-	 * @param min
-	 * @param maxNalumnos
-	 * @param precio
-	 * @param edadMinima
-	 * @param edadMaxima
-	 */
-	public void crearCurso(String idCurso, String idioma, int dia, int mes, int ano, int diaf, int mesf,
-			int anof, int hora, int min, int maxNalumnos, double precio,int edadMinima,int edadMaxima){
-		if(checkCurso(idCurso)==null){		// Comprobamos que no exista un curso con idCurso
-			if(hora>=8 && hora<=21){	// Comprobamos que la hora es entre las 8 y las 21
-				GregorianCalendar fechaIni = new GregorianCalendar(ano, mes-1, dia);
-				java.sql.Date milfechaIni = new java.sql.Date(fechaIni.getTimeInMillis());	// Almacenamos la conversion a milisegundos de la fecha de inicio
-				GregorianCalendar fechaFin = new GregorianCalendar(anof, mesf-1, diaf);
-				java.sql.Date milfechaFin = new java.sql.Date(fechaFin.getTimeInMillis());	// Almacenamos la conversion a milisegundos de la fecha de fin
-				long diferencia = (milfechaFin.getTime() - milfechaIni.getTime()); // Almacenamos la diferencia de fin - inicio
-				if(diferencia > 0){		// Comprobamos que la diferencia sea mayor que 0
-					if(maxNalumnos>0){	// Comprobamos que el numero maximo de alumnos sea mayor que 0
-						if(precio>=0){	// Comprobamos que el precio sea mayor o igual a 0
-							if(edadMinima>0){	// Comprobamos que la edad minima es mayor que 0
-								if(edadMaxima<17){	// Comprobamos que la edad maxima es menor que 17.
-									GregorianCalendar horario =new GregorianCalendar(0,0,0,hora,min);
-									Curso curso= new CursoJunior(idCurso, idioma, fechaIni, fechaFin, horario, maxNalumnos, precio, edadMinima, edadMaxima);
-									cursosAcademia.add(curso);
-									System.out.println("**OK** - Curso "+curso.getIdCurso()+" creado correctamente.");
-								}else System.out.println("**AVISO** La edad maxima debe ser menor o igual que 18. **");
-							}else System.out.println("**AVISO** La edad minima debe ser mayor que 0. **");
-						}else System.out.println("**AVISO** El precio ha de ser igual o mayor que 0. **");
-					}else System.out.println("**AVISO** El numero maximo de alumnos debe ser mayor que 0. **");
-				}else System.out.println("**AVISO** La fecha de inicio del curso debe ser anterior a la fecha de fin. **");
-			}else System.out.println("**AVISO** La hora debe ser entre las 8 y las 21. **");
-		}else System.out.println("**AVISO** Ya existe un curso con identificador "+idCurso+". **");
-	
 	}
 	/**
 	 * Imprime la lista de cursos.
@@ -1005,28 +984,24 @@ public class Academia {
 		Academia AcademiaZorrilla=new Academia();
 		
 	// Creacion de alumnos
-		// Adultos
-			//(String DNI,String nombre,String apellidos)
-		AcademiaZorrilla.crearAlumno("72885727s", "A", "1");	//OK
-		AcademiaZorrilla.crearAlumno("12345667r", "A", "2");	//OK
-		AcademiaZorrilla.crearAlumno("04556671q", "A", "3");	//OK
-	
-		// Juniors
-			//(String DniAdultoResponsable,String nombre,String apellidos, int dia, int mes ,int ano)
-		AcademiaZorrilla.crearAlumno("72885727s", "J", "1 a",9,12,2011);	//OK
-		AcademiaZorrilla.crearAlumno("72885727s", "J", "2",1,1,2000);		//OK
-		
+		//(String DNI,String nombre,String apellidos, int dia, int mes ,int ano, String DNIResponsable))
+		AcademiaZorrilla.crearAlumno("11111111a", "Adulto", "1",0,0,0,null);	// Adultos 	//OK
+		AcademiaZorrilla.crearAlumno("22222222b", "Adulto", "2",0,0,0,null);	// Adultos 	//OK
+		AcademiaZorrilla.crearAlumno("33333333c", "Adulto", "3",0,0,0,null);	// Adultos 	//OK
+		AcademiaZorrilla.crearAlumno(null, "Junior", "1",1,1,2011,"11111111a");	// Junior	//OK
+		AcademiaZorrilla.crearAlumno(null, "Junior", "2",1,1,2000,"11111111a");	// Junior	//OK
 		// Errores
-		AcademiaZorrilla.crearAlumno("72885727s", "A", "1");			//Error mismo DNI
-		AcademiaZorrilla.crearAlumno("72885727s", "J", "2",1,1,2010);	//Error mismo nombre y apellido
-		AcademiaZorrilla.crearAlumno("72885927s", "J", "3",1,1,2010);	//Error no existe adulto asignado
-		AcademiaZorrilla.crearAlumno("72885727s", "J", "3",1,1,2017);	//Error edad minima
-		AcademiaZorrilla.crearAlumno("72885727s", "J", "3",9,12,1998);	//Error edad maxima
+		AcademiaZorrilla.crearAlumno("11111111a", "Adulto10", "1",0,0,0,null);	//Error mismo DNI
+		AcademiaZorrilla.crearAlumno(null, "Junior", "1",1,1,2011,"00000000a");	//Error no existe el adulto asignado
+		AcademiaZorrilla.crearAlumno(null, "Junior", "1",1,1,2017,"11111111a");	//Error edad minima
+		AcademiaZorrilla.crearAlumno(null, "Junior", "1",1,1,1998,"11111111a");	//Error edad maxima
 		// Comprobacion
 		AcademiaZorrilla.imprimirAlumnos();
 		
-		
+		//TODO
 	// Creacion de cursos
+		// (String idCurso, String idioma, int nivel, int dia, int mes, int ano, int diaf, int mesf,
+		//  int anof, int hora, int min, int maxNalumnos, double precio, int edadMinima,int edadMaxima)
 		// Normales
 			// (String idCurso, String idioma, int nivel, int dia, int mes, int ano, int diaf, int mesf, int anof, 
 			//	int hora, int min, int maxNalumnos, double precio) 

@@ -1,9 +1,6 @@
 package academiaZorrilla;
 
 import java.util.GregorianCalendar;
-
-import academiaZorrilla.Adulto;
-import academiaZorrilla.Alumno;
 /**
  * 
  * @author oscafer

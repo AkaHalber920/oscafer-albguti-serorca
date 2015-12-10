@@ -1,8 +1,5 @@
 package academiaZorrilla;
 
-import academiaZorrilla.Alumno;
-import academiaZorrilla.Curso;
-
 /**
  * Representa la inscripción de un alumno en un curso de la academia.
  * 

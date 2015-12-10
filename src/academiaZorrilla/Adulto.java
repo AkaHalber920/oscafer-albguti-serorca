@@ -1,6 +1,5 @@
 package academiaZorrilla;
 
-import academiaZorrilla.Alumno;
 
 public class Adulto extends Alumno{
 	/**
