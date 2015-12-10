@@ -134,8 +134,9 @@ public class Academia {
 	/**
 	 * Imprime la lista de alumnos.
 	 */
+	@Requires ({"!alumnosAcademia.isEmpty()"})
 	public void imprimirAlumnos(){
-		if(!alumnosAcademia.isEmpty()){
+		//if(!alumnosAcademia.isEmpty()){
 		System.out.println("____________________________________________________________________");
 		System.out.println("_____________________________ Alumnos ______________________________\n");
 		Iterator<Alumno> it = alumnosAcademia.iterator();
@@ -158,7 +159,7 @@ public class Academia {
 				System.out.println("  -----------------------------------------------------------------");
 			}
 		}System.out.println("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''");
-		}else System.out.println("**OK** - No existen alumnos en la academia.");
+		//}else System.out.println("**OK** - No existen alumnos en la academia.");
 		
 	}
 	/**
