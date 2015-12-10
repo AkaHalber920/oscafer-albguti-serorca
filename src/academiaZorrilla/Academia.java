@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
+
+import com.google.java.contract.Requires;
 /**
  * Crea y mantiene la lista de cursos, alumnos y matrículas. 
  * Comprueba si se dan las condiciones previas para las matrículas y si es posible crearlas 
@@ -88,6 +90,7 @@ public class Academia {
 	 * @param mes	de nacimiento 
 	 * @param ano	de nacimiento 
 	 */
+	@Requires ({"band==true","adultoResponsable!=null","diferencia > 0 && diferencia<17"}) 
 	public void crearAlumno(String DNI,String nombre,String apellidos, int dia, int mes ,int ano,String DNIResponsable){
 		// Comprobaciones
 		//if(DNI!=null && DNIResponsable != null){
@@ -101,27 +104,26 @@ public class Academia {
 					band=true;
 				}
 			}
-			if(band==true){
-				System.out.println("**AVISO** Ya existe un alumno con DNI "+DNI+".");
-			}else{
-				Alumno alumno= new Adulto(DNI, nombre, apellidos);
-				alumnosAcademia.add(alumno);
-				System.out.println("** - Alumno "+((Adulto)alumno).getNombre()+" "+((Adulto)alumno).getApellidos()+" creado correctamente.");	
-			}
+			//assert (band==true) : "**AVISO** Ya existe un alumno con DNI "+DNI+".";
+			Alumno alumno= new Adulto(DNI, nombre, apellidos);
+			alumnosAcademia.add(alumno);
+			System.out.println("** - Alumno "+((Adulto)alumno).getNombre()+" "+((Adulto)alumno).getApellidos()+" creado correctamente.");	
 		}else{						// JUNIOR
 			Alumno adultoResponsable=checkAlumno(DNIResponsable);
-			if(adultoResponsable!=null){
+			//assert (adultoResponsable!=null) : "**AVISO** No existe el alumno adulto con DNI "+DNIResponsable+". **";
+			//if(adultoResponsable!=null){
 				GregorianCalendar fechaNacimiento=new GregorianCalendar(ano, mes-1, dia);
 				java.sql.Date milfechaNacimiento = new java.sql.Date(fechaNacimiento.getTimeInMillis());	// Almacenamos la conversion en milisegundos de la fecha de nacimiento
 				GregorianCalendar fechaActual = new GregorianCalendar();
 				java.sql.Date milfechaActual = new java.sql.Date(fechaActual.getTimeInMillis());	// Almacenamos la conversion en milisegundos de la fecha actual
 				long diferencia = this.getDiferenciaFechas(milfechaNacimiento, milfechaActual, 0);
-				if(diferencia > 0 && diferencia<17){ // Comprobamos que la diferencia sea mayor que 0 y menor de 17
+				//assert (diferencia > 0 && diferencia<17) : "**AVISO** La edad del alumno debe ser mayor de 0 y menor de 17.(Tiene "+diferencia+" años) **";
+				//if(diferencia > 0 && diferencia<17){ // Comprobamos que la diferencia sea mayor que 0 y menor de 17
 					Alumno alumno= new Junior(nombre,apellidos, fechaNacimiento, (Adulto)adultoResponsable);
 					alumnosAcademia.add(alumno);
 					System.out.println("** - Alumno "+alumno.getNombre()+" "+alumno.getApellidos()+" creado correctamente.");
-				}else System.out.println("**AVISO** La edad del alumno debe ser mayor de 0 y menor de 17.(Tiene "+diferencia+" años) **");
-			}else System.out.println("**AVISO** No existe el alumno adulto con DNI "+DNIResponsable+". **");
+				//}else System.out.println("**AVISO** La edad del alumno debe ser mayor de 0 y menor de 17.(Tiene "+diferencia+" años) **");
+			//}else System.out.println("**AVISO** No existe el alumno adulto con DNI "+DNIResponsable+". **");
 		}
 		// Mensajes de error
 	
@@ -1010,11 +1012,11 @@ public class Academia {
 		// Junior
 			// (String idCurso, String idioma, int dia, int mes, int ano, int diaf, int mesf, int anof, int hora, 
 			//	int min, int maxNalumnos, double precio, int edadMinima, int edadMaxima)
-		AcademiaZorrilla.crearCurso("I.ja", "Ingles", 1, 1, 2016, 1, 1, 2017, 8, 0, 2, 5,4,12);
+		//AcademiaZorrilla.crearCurso("I.ja", "Ingles", 1, 1, 2016, 1, 1, 2017, 8, 0, 2, 5,4,12);
 		
 		// Errores
 		AcademiaZorrilla.crearCurso("I.0a", "Ingles", 0, 1, 1, 2000, 1, 1, 2001, 8, 0, 2, 5);	//Error mismo id cn
-		AcademiaZorrilla.crearCurso("I.ja", "Ingles", 1, 1, 2000, 1, 1, 2001, 8, 0, 2, 5,4,12);	//Error mismo id cj
+		//AcademiaZorrilla.crearCurso("I.ja", "Ingles", 1, 1, 2000, 1, 1, 2001, 8, 0, 2, 5,4,12);	//Error mismo id cj
 		
 		// Comprobacion
 		AcademiaZorrilla.imprimirCursos();
