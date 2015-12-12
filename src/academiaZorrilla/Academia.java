@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 
-import com.google.java.contract.Requires;
 /**
  * Crea y mantiene la lista de cursos, alumnos y matrículas. 
  * Comprueba si se dan las condiciones previas para las matrículas y si es posible crearlas 
@@ -90,7 +89,7 @@ public class Academia {
 	 * @param mes	de nacimiento 
 	 * @param ano	de nacimiento 
 	 */
-	@Requires ({"band==true","adultoResponsable!=null","diferencia > 0 && diferencia<17"}) 
+	//@Requires ({"band==true","adultoResponsable!=null","diferencia > 0 && diferencia<17"}) 
 	public void crearAlumno(String DNI,String nombre,String apellidos, int dia, int mes ,int ano,String DNIResponsable){
 		// Comprobaciones
 		//if(DNI!=null && DNIResponsable != null){
