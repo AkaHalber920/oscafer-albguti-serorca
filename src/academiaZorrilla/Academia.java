@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 
+import com.sun.xml.internal.ws.policy.AssertionSet;
+
 /**
  * Crea y mantiene la lista de cursos, alumnos y matr��culas. 
  * Comprueba si se dan las condiciones previas para las matr��culas y si es posible crearlas 
@@ -47,34 +49,44 @@ public class Academia {
 	 * @param mes	de nacimiento 
 	 * @param ano	de nacimiento 
 	 */
-	public void crearAlumno(String DNI,String nombre,String apellidos, int dia, int mes ,int ano,String DNIResponsable){
+	public void crearAlumno(String DNI,String nombre,String apellidos, int dia, int mes ,int ano,String DNIResponsable) throws InterruptedException{
 		// Comprobaciones
 		//if(DNI!=null && DNIResponsable != null){
 		// Fin comprobaciones
-		if(DNIResponsable==null){		// ADULTO porque no tiene adulto responsable
-			Alumno adulto=checkAlumno(DNI);
-			if(adulto!=null){
-				System.out.println("**AVISO** Ya existe un alumno con DNI "+DNI+".");
-			}else{
-				Alumno alumno= new Adulto(DNI, nombre, apellidos);
-				alumnosAcademia.add(alumno);
-				System.out.println("** - Alumno "+((Adulto)alumno).getNombre()+" "+((Adulto)alumno).getApellidos()+" creado correctamente.");	
-			}
-		}else{						// JUNIOR
-			Alumno adultoResponsable=checkAlumno(DNIResponsable);
-			if(adultoResponsable!=null){
-				GregorianCalendar fechaNacimiento=new GregorianCalendar(ano, mes-1, dia);
-				java.sql.Date milfechaNacimiento = new java.sql.Date(fechaNacimiento.getTimeInMillis());	// Almacenamos la conversion en milisegundos de la fecha de nacimiento
-				GregorianCalendar fechaActual = new GregorianCalendar();
-				java.sql.Date milfechaActual = new java.sql.Date(fechaActual.getTimeInMillis());	// Almacenamos la conversion en milisegundos de la fecha actual
-				long diferencia = this.getDiferenciaFechas(milfechaNacimiento, milfechaActual, 0);
-				if(diferencia > 0 && diferencia<17){ // Comprobamos que la diferencia sea mayor que 0 y menor de 17
-					Alumno alumno= new Junior(nombre,apellidos, fechaNacimiento, (Adulto)adultoResponsable);
+			if(DNIResponsable==null){		// ADULTO porque no tiene adulto responsable
+				Alumno adulto=checkAlumno(DNI);
+				try{
+				assert adulto == null;
+				//if(adulto!=null){
+				//	System.out.println("**AVISO** Ya existe un alumno con DNI "+DNI+".");
+				//}else{
+					Alumno alumno= new Adulto(DNI, nombre, apellidos);
 					alumnosAcademia.add(alumno);
-					System.out.println("** - Alumno "+alumno.getNombre()+" "+alumno.getApellidos()+" creado correctamente.");
-				}else System.out.println("**AVISO** La edad del alumno debe ser mayor de 0 y menor de 17.(Tiene "+diferencia+" a��os) **");
-			}else System.out.println("**AVISO** No existe el alumno adulto con DNI "+DNIResponsable+". **");
-		}
+					System.out.println("** - Alumno "+((Adulto)alumno).getNombre()+" "+((Adulto)alumno).getApellidos()+" creado correctamente.");	
+				//}
+				}catch (AssertionError ex) {
+					System.err.println("**AVISO** Ya existe un alumno con DNI "+DNI+".");
+				}
+			}else{						// JUNIOR
+				Alumno adultoResponsable=checkAlumno(DNIResponsable);
+				if(adultoResponsable!=null){
+					GregorianCalendar fechaNacimiento=new GregorianCalendar(ano, mes-1, dia);
+					java.sql.Date milfechaNacimiento = new java.sql.Date(fechaNacimiento.getTimeInMillis());	// Almacenamos la conversion en milisegundos de la fecha de nacimiento
+					GregorianCalendar fechaActual = new GregorianCalendar();
+					java.sql.Date milfechaActual = new java.sql.Date(fechaActual.getTimeInMillis());	// Almacenamos la conversion en milisegundos de la fecha actual
+					long diferencia = this.getDiferenciaFechas(milfechaNacimiento, milfechaActual, 0);
+					try {
+					    assert diferencia > 0 & diferencia<17;
+					//if(diferencia > 0 && diferencia<17){ // Comprobamos que la diferencia sea mayor que 0 y menor de 17
+						Alumno alumno= new Junior(nombre,apellidos, fechaNacimiento, (Adulto)adultoResponsable);
+						alumnosAcademia.add(alumno);
+						System.out.println("** - Alumno "+alumno.getNombre()+" "+alumno.getApellidos()+" creado correctamente.");
+					//}else System.out.println("**AVISO** La edad del alumno debe ser mayor de 0 y menor de 17.(Tiene "+diferencia+" a��os) **");
+					}catch(AssertionError ex) {
+						System.err.println("La edad del niño esta mallll");
+					}
+				}else System.out.println("**AVISO** No existe el alumno adulto con DNI "+DNIResponsable+". **");
+			}
 		// Mensajes de error
 	
 	
@@ -923,8 +935,9 @@ public class Academia {
 	/**
 	 * Inicio de metodo principal
 	 * @param arg
+	 * @throws InterruptedException 
 	 */
-	public static void main(String[] arg){
+	public static void main(String[] arg) throws InterruptedException{
 	// Creacion de academias
 		Academia AcademiaZorrilla=new Academia();
 		
